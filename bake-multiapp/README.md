@@ -24,17 +24,19 @@ What we want to achieve:
 - keep the repo structure separated.
 - a build process easy to understand and use
 
-The command line:
+## Buildx options
 
 ```
 docker buildx build 
---platform linux/amd64,linux/arm64 
---build-context nginx=docker-image://nginx:alpine
+--platform linux/amd64,linux/arm64
 --build-context src=ui/src 
 --build-context config=ui/config 
 -t harbor.alacasa.uk/library/dublin-ui:$TAG 
--t harbor.alacasa.uk/library/dublin-ui:latest 
+-t harbor.alacasa.uk/library/dublin-ui:latest
+--builder=kube
+--build-context nginx=docker-image://nginx:alpine 
 ./ui
+
 ```
 
 Let's analyse the above command:
@@ -46,3 +48,19 @@ Let's analyse the above command:
 - Tagging images using the `-t` flag: `-t harbor.alacasa.uk/library/dublin-ui:latest`
 - Last, but not least, `./ui` tells where to find the Dockerfile.
 
+## Buildx options as a bake target
+
+```
+target "ui" {
+    dockerfile = "ui/Dockerfile"
+    contexts = {
+        src = "ui/src"
+        config = "ui/config"
+   nginx = "docker-image://nginx:alpine"
+    }
+    tags = [
+"harbor.alacasa.uk/library/dublin-ui:latest",     "harbor.alacasa.uk/library/dublin-ui:${TAG}"
+    ]
+    platforms = [ "linux/amd64", "linux/arm64" ]
+}
+```
