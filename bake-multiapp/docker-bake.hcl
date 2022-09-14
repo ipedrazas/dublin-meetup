@@ -9,8 +9,8 @@ variable "TAG" {
 target "ui" {
     dockerfile = "ui/Dockerfile"
     contexts = {
-        src = "ui/src"
-        config = "ui/config"
+        src = "./ui/src"
+        config = "./config"
         nginx = "docker-image://nginx:alpine"
     }
     tags = [

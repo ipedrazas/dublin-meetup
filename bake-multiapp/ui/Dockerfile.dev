@@ -2,7 +2,7 @@ FROM nginx
 
 COPY ./src/index.html /usr/share/nginx/html
 
-COPY  ./config/dev-secret /app/secret
+COPY  ../config/dev-secret /app/secret
 
 
 
